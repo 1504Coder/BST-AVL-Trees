@@ -25,9 +25,9 @@ This Java program provides an implementation of a BST with the following functio
 
 ## AVL Tree
 
-Unlike a regular binary search tree (BST) where the height can become unbalanced, an AVL tree ensures that the height difference between the left and right subtrees of any node is at most 1. 
+Unlike a regular binary search tree (BST) where the height can become unbalanced, an AVL tree ensures that the height difference between the left and right subtrees of any node is at most one. 
 
-The AVL Tree is able to self-balance throgh the follpwoing methods. 
+The AVL Tree can self-balance through the following methods. 
 
 - Left rotation (rotateLeft): Balances the tree by rotating a node to the left.
 - Right rotation (rotateRight): Balances the tree by rotating a node to the right.
