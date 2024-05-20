@@ -1,8 +1,5 @@
-    import java.util.Queue;
-    import java.util.LinkedList;
-    import java.lang.invoke.TypeDescriptor;
-    import java.util.*;
-    import java.lang.Class;
+	import java.util.*;
+
 
     /**
      * @author Elijah Philip
@@ -568,21 +565,17 @@
       }
 
       public void toStringTreeFormat(Node < E > currentNode, int currentDepth, StringBuilder resultBuilder) {
-        // Insert spaces for indentation at each level of depth
         for (int i = 0; i < currentDepth; i++) {
           resultBuilder.append("|  ");
         }
 
-        // If the current node is absent, append a representation of null and exit
         if (currentNode == null) {
           resultBuilder.append("-null\n");
           return;
         }
 
-        // Append the value of the present node
         resultBuilder.append("-").append(currentNode.data).append("\n");
 
-        // Recursively invoke the method for the left and right subtrees
         toStringTreeFormat(currentNode.left, currentDepth + 1, resultBuilder);
         toStringTreeFormat(currentNode.right, currentDepth + 1, resultBuilder);
       }
@@ -628,3 +621,4 @@
         }
       }
     }
+
