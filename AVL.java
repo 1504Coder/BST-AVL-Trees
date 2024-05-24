@@ -1,8 +1,4 @@
-import java.util.Queue;
-import java.util.LinkedList;
-import java.lang.invoke.TypeDescriptor;
 import java.util.*;
-import java.lang.Class;
 
 /**
  * @author Elijah Philip
@@ -32,6 +28,7 @@ public class AVL < E extends Comparable < E >> implements Iterable < E > , Clone
     }
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public AVL < E > clone() {
     try {
@@ -133,6 +130,7 @@ public class AVL < E extends Comparable < E >> implements Iterable < E > , Clone
     }
   }
 
+  
   @Override
   public Iterator < E > iterator() {
     return new InOrderIter();
@@ -529,25 +527,29 @@ public class AVL < E extends Comparable < E >> implements Iterable < E > , Clone
     return o;
   }
 
-  public void toStringTreeFormat(Node < E > currentNode, int currentDepth, StringBuilder resultBuilder) {
-    // Insert spaces for indentation at each level of depth
-    for (int i = 0; i < currentDepth; i++) {
-      resultBuilder.append("|  ");
+
+    // Method to get a string representation of the tree in tree format
+    public String toStringTreeFormat() {
+      StringBuilder sb = new StringBuilder();
+      toStringTreeFormat(head, 0, sb);
+      return sb.toString();
     }
 
-    // If the current node is absent, append a representation of null and exit
-    if (currentNode == null) {
-      resultBuilder.append("-null\n");
-      return;
+    public void toStringTreeFormat(Node < E > currentNode, int currentDepth, StringBuilder resultBuilder) {
+      for (int i = 0; i < currentDepth; i++) {
+        resultBuilder.append("|  ");
+      }
+
+      if (currentNode == null) {
+        resultBuilder.append("-null\n");
+        return;
+      }
+
+      resultBuilder.append("-").append(currentNode.data).append("\n");
+
+      toStringTreeFormat(currentNode.left, currentDepth + 1, resultBuilder);
+      toStringTreeFormat(currentNode.right, currentDepth + 1, resultBuilder);
     }
-
-    // Append the value of the present node
-    resultBuilder.append("-").append(currentNode.data).append("\n");
-
-    // Recursively invoke the method for the left and right subtrees
-    toStringTreeFormat(currentNode.left, currentDepth + 1, resultBuilder);
-    toStringTreeFormat(currentNode.right, currentDepth + 1, resultBuilder);
-  }
 
   int getHeight(Node < E > cNode) {
     return (cNode == null) ? 0 : cNode.height;
@@ -591,6 +593,49 @@ public class AVL < E extends Comparable < E >> implements Iterable < E > , Clone
   private Node < E > rotateLeftRight(Node < E > node3) {
     node3.left = rotateLeft(node3.left);
     return rotateRight(node3);
+  }
+  
+  /**
+   * Returns a collection whose elements range from fromElement to toElement.
+   *
+   * @param fromElement Low endpoint (inclusive) of the returned collection.
+   * @param toElement   High endpoint (inclusive) of the returned collection.
+   * @return a collection containing a portion of this tree whose elements range from fromElement to toElement.
+   * @throws NullPointerException     if fromElement or toElement is null.
+   * @throws IllegalArgumentException if fromElement is greater than toElement.
+   */
+  public ArrayList < E > getRange(E fromElement, E toElement) {
+    if (fromElement == null || toElement == null) throw new NullPointerException("This function's argument does not accept null.");
+
+    if (fromElement.compareTo(toElement) > 0) throw new IllegalArgumentException("The range should start from a low endpoint, to a higher endpoint.");
+
+    ArrayList < E > result = new ArrayList < > ();
+    getRangeHelper(head, fromElement, toElement, result);
+    return result;
+  }
+  
+  
+  
+  private void getRangeHelper(Node < E > node, E fromElement, E toElement, ArrayList < E > result) {
+    if (node != null) {
+      int compareFrom = fromElement.compareTo(node.data);
+      int compareTo = toElement.compareTo(node.data);
+
+      // Traverse left subtree if needed
+      if (compareFrom < 0) {
+        getRangeHelper(node.left, fromElement, toElement, result);
+      }
+
+      // Add the current node's data if it's within the range
+      if (compareFrom <= 0 && compareTo >= 0) {
+        result.add(node.data);
+      }
+
+      // Traverse right subtree if needed
+      if (compareTo > 0) {
+        getRangeHelper(node.right, fromElement, toElement, result);
+      }
+    }
   }
 
 }
